@@ -5,262 +5,136 @@ Vue.component('grid', {
             type: String,
             required: true
         },
-        "order-by": String
+        "order-by-col": String
     },
     template: `
-        <table class="table table-bordered table-condensed table-hover" @columnordered="columnOrdered">
-            <thead><tr><slot></slot></tr></thead>
-            <tbody>
-                <tr v-for="row in gridData"><td v-for="column in columns"> {{ row[column.name] }} </td></tr>
-            </tbody>
-        </table>
+      <div class="col-md-12">
+        <div class="row filters">
+          <div class="col-md-12">
+            <div class="form-inline">
+              <div class="form-group">
+                <label for="exampleInputName2">Records per page</label>
+                <select class="form-control" v-model="pageSize">
+                  <option value="10">10</option>
+                  <option value="20">20</option>
+                  <option value="50">50</option>
+                  <option value="100">100</option>
+                </select>
+              </div>
+              <div class="form-group pull-right">
+                <label for="exampleInputEmail2">Search</label>
+                <input type="search" class="form-control" placeholder="Search here" v-model="searchKey">
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="row tbl-box">
+          <div class="col-md-12">
+            <table class="table table-bordered table-condensed table-hover">
+              <thead><tr><slot></slot></tr></thead>
+              <tbody>
+                  <tr v-for="row in gridUpdatedData"><td v-for="column in columns"> {{ row[column.name] }} </td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-12">
+            <nav aria-label="Page navigation" class="pull-right">
+              <ul class="pagination">
+                <li :class="{ disabled:  previousBtn}">
+                  <a href="#" aria-label="Previous">
+                    <span aria-hidden="true">&laquo;</span>
+                    Prev
+                  </a>
+                </li>
+                <li v-for="n in pageCount" :class="{ active: currentPage == n }" @click="gotoPage(n)"><a href="#">{{n}}</a></li>
+                <!-- <li><a href="#">...</a></li> -->
+                <li :class="{ disabled:  previousBtn}">
+                  <a href="#" aria-label="Next">
+                    Next
+                    <span aria-hidden="true">&raquo;</span>
+                  </a>
+                </li>
+              </ul>
+            </nav>
+          </div>
+        </div>
+      </div>
     `,
     data() {
         return {
             columns: [],
-            gridData: [
-                {
-                  "id": 1,
-                  "name": "Leanne Graham",
-                  "username": "Bret",
-                  "email": "Sincere@april.biz",
-                  "address": {
-                    "street": "Kulas Light",
-                    "suite": "Apt. 556",
-                    "city": "Gwenborough",
-                    "zipcode": "92998-3874",
-                    "geo": {
-                      "lat": "-37.3159",
-                      "lng": "81.1496"
-                    }
-                  },
-                  "phone": "1-770-736-8031 x56442",
-                  "website": "hildegard.org",
-                  "company": {
-                    "name": "Romaguera-Crona",
-                    "catchPhrase": "Multi-layered client-server neural-net",
-                    "bs": "harness real-time e-markets"
-                  }
-                },
-                {
-                  "id": 2,
-                  "name": "Ervin Howell",
-                  "username": "Antonette",
-                  "email": "Shanna@melissa.tv",
-                  "address": {
-                    "street": "Victor Plains",
-                    "suite": "Suite 879",
-                    "city": "Wisokyburgh",
-                    "zipcode": "90566-7771",
-                    "geo": {
-                      "lat": "-43.9509",
-                      "lng": "-34.4618"
-                    }
-                  },
-                  "phone": "010-692-6593 x09125",
-                  "website": "anastasia.net",
-                  "company": {
-                    "name": "Deckow-Crist",
-                    "catchPhrase": "Proactive didactic contingency",
-                    "bs": "synergize scalable supply-chains"
-                  }
-                },
-                {
-                  "id": 3,
-                  "name": "Clementine Bauch",
-                  "username": "Samantha",
-                  "email": "Nathan@yesenia.net",
-                  "address": {
-                    "street": "Douglas Extension",
-                    "suite": "Suite 847",
-                    "city": "McKenziehaven",
-                    "zipcode": "59590-4157",
-                    "geo": {
-                      "lat": "-68.6102",
-                      "lng": "-47.0653"
-                    }
-                  },
-                  "phone": "1-463-123-4447",
-                  "website": "ramiro.info",
-                  "company": {
-                    "name": "Romaguera-Jacobson",
-                    "catchPhrase": "Face to face bifurcated interface",
-                    "bs": "e-enable strategic applications"
-                  }
-                },
-                {
-                  "id": 4,
-                  "name": "Patricia Lebsack",
-                  "username": "Karianne",
-                  "email": "Julianne.OConner@kory.org",
-                  "address": {
-                    "street": "Hoeger Mall",
-                    "suite": "Apt. 692",
-                    "city": "South Elvis",
-                    "zipcode": "53919-4257",
-                    "geo": {
-                      "lat": "29.4572",
-                      "lng": "-164.2990"
-                    }
-                  },
-                  "phone": "493-170-9623 x156",
-                  "website": "kale.biz",
-                  "company": {
-                    "name": "Robel-Corkery",
-                    "catchPhrase": "Multi-tiered zero tolerance productivity",
-                    "bs": "transition cutting-edge web services"
-                  }
-                },
-                {
-                  "id": 5,
-                  "name": "Chelsey Dietrich",
-                  "username": "Kamren",
-                  "email": "Lucio_Hettinger@annie.ca",
-                  "address": {
-                    "street": "Skiles Walks",
-                    "suite": "Suite 351",
-                    "city": "Roscoeview",
-                    "zipcode": "33263",
-                    "geo": {
-                      "lat": "-31.8129",
-                      "lng": "62.5342"
-                    }
-                  },
-                  "phone": "(254)954-1289",
-                  "website": "demarco.info",
-                  "company": {
-                    "name": "Keebler LLC",
-                    "catchPhrase": "User-centric fault-tolerant solution",
-                    "bs": "revolutionize end-to-end systems"
-                  }
-                },
-                {
-                  "id": 6,
-                  "name": "Mrs. Dennis Schulist",
-                  "username": "Leopoldo_Corkery",
-                  "email": "Karley_Dach@jasper.info",
-                  "address": {
-                    "street": "Norberto Crossing",
-                    "suite": "Apt. 950",
-                    "city": "South Christy",
-                    "zipcode": "23505-1337",
-                    "geo": {
-                      "lat": "-71.4197",
-                      "lng": "71.7478"
-                    }
-                  },
-                  "phone": "1-477-935-8478 x6430",
-                  "website": "ola.org",
-                  "company": {
-                    "name": "Considine-Lockman",
-                    "catchPhrase": "Synchronised bottom-line interface",
-                    "bs": "e-enable innovative applications"
-                  }
-                },
-                {
-                  "id": 7,
-                  "name": "Kurtis Weissnat",
-                  "username": "Elwyn.Skiles",
-                  "email": "Telly.Hoeger@billy.biz",
-                  "address": {
-                    "street": "Rex Trail",
-                    "suite": "Suite 280",
-                    "city": "Howemouth",
-                    "zipcode": "58804-1099",
-                    "geo": {
-                      "lat": "24.8918",
-                      "lng": "21.8984"
-                    }
-                  },
-                  "phone": "210.067.6132",
-                  "website": "elvis.io",
-                  "company": {
-                    "name": "Johns Group",
-                    "catchPhrase": "Configurable multimedia task-force",
-                    "bs": "generate enterprise e-tailers"
-                  }
-                },
-                {
-                  "id": 8,
-                  "name": "Nicholas Runolfsdottir V",
-                  "username": "Maxime_Nienow",
-                  "email": "Sherwood@rosamond.me",
-                  "address": {
-                    "street": "Ellsworth Summit",
-                    "suite": "Suite 729",
-                    "city": "Aliyaview",
-                    "zipcode": "45169",
-                    "geo": {
-                      "lat": "-14.3990",
-                      "lng": "-120.7677"
-                    }
-                  },
-                  "phone": "586.493.6943 x140",
-                  "website": "jacynthe.com",
-                  "company": {
-                    "name": "Abernathy Group",
-                    "catchPhrase": "Implemented secondary concept",
-                    "bs": "e-enable extensible e-tailers"
-                  }
-                },
-                {
-                  "id": 9,
-                  "name": "Glenna Reichert",
-                  "username": "Delphine",
-                  "email": "Chaim_McDermott@dana.io",
-                  "address": {
-                    "street": "Dayna Park",
-                    "suite": "Suite 449",
-                    "city": "Bartholomebury",
-                    "zipcode": "76495-3109",
-                    "geo": {
-                      "lat": "24.6463",
-                      "lng": "-168.8889"
-                    }
-                  },
-                  "phone": "(775)976-6794 x41206",
-                  "website": "conrad.com",
-                  "company": {
-                    "name": "Yost and Sons",
-                    "catchPhrase": "Switchable contextually-based project",
-                    "bs": "aggregate real-time technologies"
-                  }
-                },
-                {
-                  "id": 10,
-                  "name": "Clementina DuBuque",
-                  "username": "Moriah.Stanton",
-                  "email": "Rey.Padberg@karina.biz",
-                  "address": {
-                    "street": "Kattie Turnpike",
-                    "suite": "Suite 198",
-                    "city": "Lebsackbury",
-                    "zipcode": "31428-2261",
-                    "geo": {
-                      "lat": "-38.2386",
-                      "lng": "57.2232"
-                    }
-                  },
-                  "phone": "024-648-3804",
-                  "website": "ambrose.net",
-                  "company": {
-                    "name": "Hoeger LLC",
-                    "catchPhrase": "Centralized empowering task-force",
-                    "bs": "target end-to-end models"
-                  }
-                }
-              ],
-            orderedBy: ""
+            gridData: [],
+            orderedBy: "",
+            sortDir: "",
+            pageSize: 10,
+            searchKey: "",
+            maxPagenation: 6,
+            currentPage: 1
         };
+    },
+    computed: {
+      pageCount() {
+        var dataLength = this.gridData.length;
+        var pagesize = this.pageSize;
+        return Math.round(dataLength / pagesize, 1);
+      },
+      previousBtn() {
+        return this.currentPage == 1;
+      },
+      nextBtn() { 
+        return this.currentPage == this.pageCount;
+      },
+      gridUpdatedData() {
+        var gridUpdatedData = this.gridData;
+        var filterKey = this.searchKey;
+        //TODO: Searching
+        if (filterKey) {
+          gridUpdatedData = gridUpdatedData.filter(function (row) {
+              return Object.keys(row).some(function (key) {
+                  return String(row[key]).toLowerCase().indexOf(filterKey) > -1;
+              });
+          });
+        }
+
+        // TODO : Sorting
+        gridUpdatedData = _.orderBy(gridUpdatedData, [this.orderedBy], [this.sortDir]);
+
+        // TODO: Row Length
+        gridUpdatedData = _.slice(gridUpdatedData, 0, this.pageSize);
+
+        return gridUpdatedData;
+      }
     },
     created() {
         this.columns = this.$children;
-        this.orderedBy = this.order_by;
+        this.orderedBy = this.orderByCol;
+        this.sortDir = "asc";
+        this.$http.get(this.ajaxUrl).then(response => {
+          this.gridData = response.body;
+        }, response => {
+          // error callback
+          console.log(response.body);
+        });
+
+        this.$on('column_ordered', function (column) {  
+          this.orderedBy = column.columnname;
+          this.sortDir = column.sortdir;
+          
+          this.columns = _.map(this.columns, function(o) { 
+            if (column.columnname != o.name) {
+              return _.set(o, 'ordered', false); 
+            } else {
+              return o;
+            }
+          });
+        });
     },
     methods: {
-        columnOrdered(column) {
-            console.log(column);
-        }
+      gotoPage(page) {
+        this.currentPage = page;
+      }
     }
 });
 
@@ -276,13 +150,21 @@ Vue.component('grid-column', {
             default: this.name
         }
     },
-    template: `<th @click="order"> {{ headText }} <i :class="'glyphicon pull-right ' + orderClass"></i></th>`,
+    template: `<th @click="order"> {{ headText }} <i :class="glyphiconClass"></i></th>`,
     data() {
         return {
             orderClass: "glyphicon-triangle-bottom",
             ordered: false,
             sortDirection: "asc"
         };
+    },
+    computed:{
+        glyphiconClass() {
+          if(this.ordered)
+            return "glyphicon pull-right " + this.orderClass;
+          else
+            return "glyphicon pull-right glyphicon-triangle-bottom";
+        }
     },
     methods: {
         order() {
@@ -294,11 +176,16 @@ Vue.component('grid-column', {
                 this.orderClass = "glyphicon-triangle-bottom";
                 this.sortDirection = "desc";
             }
-            this.$emit('columnordered', this.name);
+            this.$parent.$emit('column_ordered', { columnname: this.name, sortdir: this.sortDirection });
         }
     }
 });
 
 var app = new Vue({
-   el: '#root' 
+   el: '#root',
+   data() {
+     return {
+      namelst: ["karthi","selva","sathis", "sabari"]
+     }
+   }
 });

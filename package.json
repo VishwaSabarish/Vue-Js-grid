@@ -1,0 +1,19 @@
+{
+  "name": "vue-js-grid",
+  "version": "1.0.0",
+  "description": "vue js grid ",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/VishwaSabarish/Vue-Js-grid.git"
+  },
+  "author": "sabarish",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/VishwaSabarish/Vue-Js-grid/issues"
+  },
+  "homepage": "https://github.com/VishwaSabarish/Vue-Js-grid#readme"
+}
