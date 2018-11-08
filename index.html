@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Vue Js Tests</title>
+    <link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/css/bootstrap.min.css'/>
+    <!-- development version, includes helpful console warnings -->
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+</head>
+<body>
+    <div id="root">
+        <grid ajax-url="https://jsonplaceholder.typicode.com/users" order-by="id">
+            <grid-column name="id" head-text="ID"></grid-column>
+            <grid-column name="name" head-text="Name"></grid-column>
+            <grid-column name="username" head-text="User Name"></grid-column>
+            <grid-column name="email" head-text="Email"></grid-column>
+            <grid-column name="phone" head-text="Phone"></grid-column>
+        </grid>
+    </div>
+    
+    <script src="js/main.js"></script>
+</body>
+</html>
